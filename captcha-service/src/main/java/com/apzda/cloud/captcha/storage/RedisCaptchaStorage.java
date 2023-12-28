@@ -63,7 +63,7 @@ public class RedisCaptchaStorage implements CaptchaStorage {
         val key = "captcha." + genId(uuid, captcha);
         val ca = objectMapper.writeValueAsString(captcha);
         stringRedisTemplate.opsForValue()
-            .set(key, ca, captcha.getExpireTime() - DateUtil.currentSeconds() + Duration.ofSeconds(1).toSeconds(),
+            .set(key, ca, captcha.getExpireTime() - DateUtil.currentSeconds() + Duration.ofSeconds(5).toSeconds(),
                     TimeUnit.SECONDS);
     }
 
@@ -83,7 +83,9 @@ public class RedisCaptchaStorage implements CaptchaStorage {
     public int getErrorCount(String uuid, String id) {
         val key = "captcha.err." + genId(uuid, id);
         try {
-            return Math.toIntExact(Objects.requireNonNull(stringRedisTemplate.opsForValue().increment(key)));
+            val intExact = Math.toIntExact(Objects.requireNonNull(stringRedisTemplate.opsForValue().increment(key)));
+            stringRedisTemplate.expire(key, 180, TimeUnit.MINUTES);
+            return intExact;
         }
         catch (Exception e) {
             log.warn("Cannot get try count for captcha(uuid:{}, id:{}) - {}", uuid, id, e.getMessage());
