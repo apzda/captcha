@@ -1,0 +1,8 @@
+spring:
+  config:
+    import: classpath:apzda.captcha.service.properties
+server:
+  port: 38082
+logging:
+  level:
+    com.apzda: debug
