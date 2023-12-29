@@ -18,6 +18,8 @@ package com.apzda.cloud.captcha.provider;
 
 import cn.hutool.captcha.AbstractCaptcha;
 import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.generator.CodeGenerator;
+import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.date.DateUtil;
 import com.apzda.cloud.captcha.Captcha;
@@ -25,6 +27,7 @@ import com.apzda.cloud.captcha.ValidateStatus;
 import com.apzda.cloud.captcha.storage.CaptchaStorage;
 import com.apzda.cloud.gsvc.config.Props;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 import java.io.ByteArrayOutputStream;
@@ -45,10 +48,18 @@ public class ImageCaptchaProvider implements CaptchaProvider {
 
     private Props props;
 
+    private CodeGenerator codeGenerator;
+
     @Override
     public void init(@NonNull CaptchaStorage storage, @NonNull Props props) throws Exception {
         this.captchaStorage = storage;
         this.props = props;
+        if (StringUtils.isNotBlank(props.get("codes"))) {
+            this.codeGenerator = new RandomGenerator(props.get("codes"), props.getInt("length", 4));
+        }
+        else {
+            this.codeGenerator = new RandomGenerator(props.getInt("length", 4));
+        }
     }
 
     @Override
@@ -59,12 +70,18 @@ public class ImageCaptchaProvider implements CaptchaProvider {
     @Override
     public Captcha create(String uuid, int width, int height, Duration timeout) throws Exception {
         AbstractCaptcha captcha;
-        if ("line".equalsIgnoreCase(props.getString("type", "line"))) {
+        val type = props.getString("type", "line");
+        if ("line".equalsIgnoreCase(type)) {
             captcha = CaptchaUtil.createLineCaptcha(width, height);
+        }
+        else if ("shear".equalsIgnoreCase(type)) {
+            captcha = CaptchaUtil.createShearCaptcha(width, height);
         }
         else {
             captcha = CaptchaUtil.createCircleCaptcha(width, height);
         }
+        captcha.setGenerator(codeGenerator);
+
         val code = captcha.getCode();
         val id = UUID.randomUUID().toString();
         val ca = new Captcha();

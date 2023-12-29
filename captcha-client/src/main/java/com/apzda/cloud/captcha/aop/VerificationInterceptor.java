@@ -17,17 +17,22 @@
 package com.apzda.cloud.captcha.aop;
 
 import com.apzda.cloud.captcha.CaptchaException;
+import com.apzda.cloud.captcha.ICaptchaData;
 import com.apzda.cloud.captcha.error.CaptchaError;
 import com.apzda.cloud.captcha.error.CaptchaExpired;
 import com.apzda.cloud.captcha.proto.CaptchaService;
 import com.apzda.cloud.captcha.proto.CheckReq;
 import com.apzda.cloud.gsvc.core.GsvcContextHolder;
 import com.apzda.cloud.gsvc.utils.I18nHelper;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,13 +49,29 @@ public class VerificationInterceptor {
     private final CaptchaService captchaService;
 
     @Before("@annotation(com.apzda.cloud.captcha.aop.ValidateCaptcha)")
-    public void interceptor() {
-        val request = GsvcContextHolder.getRequest();
-        if (request.isPresent()) {
-            val uuid = GsvcContextHolder.header("X-CAPTCHA-UUID");
-            val id = GsvcContextHolder.header("X-CAPTCHA-ID");
-            log.debug("Start to validate captcha: uuid({}), id({}))", uuid, id);
+    public void interceptor(JoinPoint joinPoint) {
+        val args = joinPoint.getArgs();
+        val captchaData = new CaptchaData();
+        if (args.length > 0 && !BeanUtils.isSimpleProperty(args[0].getClass())) {
+            BeanUtils.copyProperties(args[0], captchaData);
+            log.trace("Retrieve Captcha data from args[0]: {}", captchaData);
+        }
 
+        if (StringUtils.isBlank(captchaData.getCaptchaId())) {
+            val request = GsvcContextHolder.getRequest();
+            if (request.isPresent()) {
+                val uuid = GsvcContextHolder.header("X-CAPTCHA-UUID");
+                val id = GsvcContextHolder.header("X-CAPTCHA-ID");
+                captchaData.setCaptchaId(id);
+                captchaData.setCaptchaUuid(uuid);
+                log.trace("Retrieve Captcha data from header: {}", captchaData);
+            }
+        }
+
+        if (StringUtils.isNotBlank(captchaData.getCaptchaId())) {
+            val uuid = captchaData.getCaptchaUuid();
+            val id = captchaData.getCaptchaId();
+            log.debug("Start to validate captcha: uuid({}), id({}))", uuid, id);
             val req = CheckReq.newBuilder().setUuid(uuid).setId(id).build();
             val validate = captchaService.check(req);
             if (validate == null) {
@@ -69,6 +90,15 @@ public class VerificationInterceptor {
         }
         log.debug("Captcha not supported!");
         throw new CaptchaException(new CaptchaError(I18nHelper.t("captcha.not.support")));
+    }
+
+    @Data
+    static class CaptchaData implements ICaptchaData {
+
+        private String captchaUuid;
+
+        private String captchaId;
+
     }
 
 }

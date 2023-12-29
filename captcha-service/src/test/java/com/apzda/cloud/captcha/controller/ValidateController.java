@@ -16,12 +16,12 @@
  */
 package com.apzda.cloud.captcha.controller;
 
+import com.apzda.cloud.captcha.ICaptchaData;
 import com.apzda.cloud.captcha.aop.ValidateCaptcha;
 import com.apzda.cloud.gsvc.dto.Response;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author fengz (windywany@gmail.com)
@@ -38,6 +38,24 @@ public class ValidateController {
     public Response<String> validate() {
         log.info("理论上到不了这里");
         return Response.success("OK");
+    }
+
+    @ValidateCaptcha
+    @PostMapping("/bizx")
+    public Response<String> validate1(@RequestBody TestRequest testRequest) {
+        log.info("理论上到不了这里");
+        return Response.success("OK");
+    }
+
+    @Data
+    public static class TestRequest implements ICaptchaData {
+
+        private String captchaUuid;
+
+        private String captchaId;
+
+        private String name;
+
     }
 
 }

@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * @since 1.0.0
  **/
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = "logging.level.com.apzda=debug")
+@TestPropertySource(properties = "logging.level.com.apzda.cloud.captcha=trace")
 class ValidateControllerTest {
 
     private WebClient webClient;
@@ -43,6 +43,28 @@ class ValidateControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .header("X-CAPTCHA-UUID", "1234")
                 .header("X-CAPTCHA-ID", "1")
+                .retrieve()
+                .bodyToMono(Response.class)
+                .block();
+            // then
+            assertThat(body).isNotNull();
+            assertThat(body.getErrCode()).isEqualTo(1);
+        }).isInstanceOf(WebClientResponseException.ServiceUnavailable.class);
+
+    }
+
+    @Test
+    void validate1() throws Exception {
+        // given
+        val testRequest = new ValidateController.TestRequest();
+        testRequest.setCaptchaId("1");
+        testRequest.setCaptchaUuid("1234");
+        // when
+        assertThatThrownBy(() -> {
+            val body = webClient.post()
+                .uri("/captcha/bizx")
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(testRequest)
                 .retrieve()
                 .bodyToMono(Response.class)
                 .block();
