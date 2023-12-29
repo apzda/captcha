@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Import;
  **/
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(CaptchaConfigProperties.class)
-@Import(RedisConfiguration.class)
+@Import({ RedisConfiguration.class })
 @RequiredArgsConstructor
 @Slf4j
 public class CaptchaConfig implements InitializingBean {

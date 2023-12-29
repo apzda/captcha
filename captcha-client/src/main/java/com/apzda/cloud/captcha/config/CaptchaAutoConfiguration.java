@@ -16,10 +16,13 @@
  */
 package com.apzda.cloud.captcha.config;
 
+import com.apzda.cloud.captcha.proto.CaptchaServiceGsvc;
 import com.apzda.cloud.gsvc.i18n.MessageSourceNameResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 /**
  * @author fengz (windywany@gmail.com)
@@ -27,8 +30,10 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.0.0
  **/
 @Configuration(proxyBeanMethods = false)
+@ComponentScan({ "com.apzda.cloud.captcha.aop" })
+@Import({ CaptchaServiceGsvc.class })
 @Slf4j
-public class MessageConfig {
+public class CaptchaAutoConfiguration {
 
     @Bean("captcha.MessageSourceNameResolver")
     MessageSourceNameResolver messageSourceNameResolver() {

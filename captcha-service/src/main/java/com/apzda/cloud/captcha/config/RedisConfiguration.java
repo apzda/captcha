@@ -33,7 +33,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(StringRedisTemplate.class)
 @Slf4j
-public class RedisConfiguration {
+class RedisConfiguration {
 
     @Bean
     CaptchaStorage captchaStorage(StringRedisTemplate stringRedisTemplate, ObjectMapper objectMapper) {

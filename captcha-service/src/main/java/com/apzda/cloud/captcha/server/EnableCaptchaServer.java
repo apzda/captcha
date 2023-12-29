@@ -16,7 +16,6 @@
  */
 package com.apzda.cloud.captcha.server;
 
-import com.apzda.cloud.captcha.EnableCaptchaClient;
 import com.apzda.cloud.captcha.config.CaptchaConfig;
 import com.apzda.cloud.captcha.proto.CaptchaServiceGsvc;
 import org.springframework.context.annotation.ComponentScan;
@@ -35,7 +34,6 @@ import java.lang.annotation.*;
 @PropertySource("classpath:apzda.captcha.service.properties")
 @Import({ CaptchaServiceGsvc.class, CaptchaConfig.class })
 @ComponentScan(basePackages = { "com.apzda.cloud.captcha.facade" })
-@EnableCaptchaClient
 @Documented
 public @interface EnableCaptchaServer {
 
