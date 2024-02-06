@@ -1,4 +1,4 @@
-FROM wulaphp/openjdk:17 as builder
+FROM wulaphp/openjdk:21-32 as builder
 
 ARG SERVICE_JAR
 
@@ -6,7 +6,7 @@ COPY ${SERVICE_JAR} /opt/app/application.jar
 
 RUN java -Djarmode=layertools -jar application.jar extract
 
-FROM wulaphp/openjdk:17
+FROM wulaphp/openjdk:21-32
 
 ARG SERVICE_NAME
 ARG SERVICE_VER
