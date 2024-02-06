@@ -35,14 +35,14 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B -P+it package -Dskip.container=yes -Djava.version=${{ matrix.java }} --file pom.xml
+        run: mvn -B package -Dskip.container=yes -Djava.version=${{ matrix.java }} --file pom.xml
       - name: Run Application
         uses: JarvusInnovations/background-action@v1
         with:
-          working-directory: captcha-service
+          working-directory: captcha-server
           wait-for: 2m
           tail: true
-          run: java -jar target/captcha-service-fat.jar --spring.profiles.active=captcha-dev &
+          run: java -jar target/captcha-server-fat.jar --spring.profiles.active=captcha-dev &
           wait-on: http-get://localhost:${{ env.SERVER_PORT_NO }}/actuator/health
       - name: Download ijhttp tools
         run: |-
@@ -50,4 +50,4 @@ jobs:
           unzip ijhttp.zip
           ./ijhttp/ijhttp --version
       - name: Execute HTTP requests
-        run: ./ijhttp/ijhttp captcha-service/src/test/http/it.http
+        run: ./ijhttp/ijhttp captcha-server/src/test/http/it.http

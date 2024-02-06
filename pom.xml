@@ -15,6 +15,7 @@
         <module>captcha-client</module>
         <module>captcha-service</module>
         <module>captcha-provider</module>
+        <module>captcha-server</module>
     </modules>
 
     <issueManagement>
