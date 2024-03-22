@@ -9,7 +9,7 @@ option java_multiple_files = true;
 option java_outer_classname = "CaptchaProto";
 
 message CreateReq {
-  string uuid = 1 [(buf.validate.field).required = true];
+  optional string uuid = 1;
   optional uint32 width = 20;
   optional uint32 height = 21;
 }
@@ -24,8 +24,8 @@ message CreateRes {
 }
 
 message  ValidateReq {
-  string uuid = 1 [(buf.validate.field).required = true];
-  string id = 2 [(buf.validate.field).required = true];
+  string uuid = 1;
+  string id = 2;
   string code = 3 [(buf.validate.field).required = true];
 }
 

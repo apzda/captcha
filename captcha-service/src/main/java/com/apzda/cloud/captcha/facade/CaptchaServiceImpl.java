@@ -29,6 +29,7 @@ import com.apzda.cloud.gsvc.utils.I18nHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -66,7 +67,11 @@ public class CaptchaServiceImpl implements CaptchaService {
             builder.setErrMsg(I18nHelper.t("captcha.provider.404"));
         }
         else {
-            val uuid = request.getUuid();
+            val uuid = header("X-CAPTCHA-UUID", request.getUuid());
+            if (StringUtils.isBlank(uuid)) {
+                builder.setErrCode(1);
+                builder.setErrMsg(I18nHelper.t("captcha.uuid.missing"));
+            }
             var width = request.getWidth();
             var height = request.getHeight();
             if (width <= 0) {
@@ -93,10 +98,22 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     @Override
     public ValidateRes validate(ValidateReq request) {
-        val uuid = request.getUuid();
-        val id = request.getId();
-        val code = request.getCode();
         val builder = ValidateRes.newBuilder();
+        val uuid = header("X-CAPTCHA-UUID", request.getUuid());
+        val id = header("X-CAPTCHA-ID", request.getId());
+        if (StringUtils.isBlank(uuid)) {
+            builder.setErrCode(1);
+            builder.setErrMsg(I18nHelper.t("captcha.uuid.missing"));
+        }
+        if (StringUtils.isBlank(id)) {
+            builder.setErrCode(1);
+            builder.setErrMsg(I18nHelper.t("captcha.id.missing"));
+        }
+        val code = request.getCode();
+        if (StringUtils.isBlank(code)) {
+            builder.setErrCode(1);
+            builder.setErrMsg(I18nHelper.t("captcha.code.missing"));
+        }
         val captchaProvider = captchaConfig.getCaptchaProvider();
         val removeOnInvalid = properties.isRemoveOnInvalid();
         if (captchaProvider == null) {
@@ -164,6 +181,10 @@ public class CaptchaServiceImpl implements CaptchaService {
             builder.setErrMsg(I18nHelper.t("captcha.invalid"));
         }
         return builder.build();
+    }
+
+    private String header(String header, String defaultValue) {
+        return StringUtils.defaultIfBlank(GsvcContextHolder.header(header), defaultValue);
     }
 
 }
