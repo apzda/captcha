@@ -1,6 +1,0 @@
-server:
-  port: 38082
-logging:
-  level:
-    com.apzda.cloud.captcha.aop: trace
-    com.apzda: debug

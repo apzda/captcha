@@ -1,0 +1,20 @@
+server:
+  port: 38082
+spring:
+  application:
+    name: captchaService
+
+eureka:
+  client:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    com.apzda.cloud.captcha.aop: trace
+    com.apzda: debug
