@@ -7,7 +7,7 @@
         <version>1.2.12</version>
     </parent>
     <artifactId>captcha</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
     <packaging>pom</packaging>
     <name>Apzda Captcha</name>
     <description>Apzda Official Captcha Module</description>
@@ -53,7 +53,7 @@
         <url>https://github.com/apzda/captcha.git</url>
         <connection>scm:git@github.com:apzda/captcha.git</connection>
         <developerConnection>scm:git:git@github.com:apzda/captcha.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v1.0.4</tag>
     </scm>
 
     <distributionManagement>
@@ -73,22 +73,22 @@
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>captcha-proto</artifactId>
-                <version>1.0.4-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>captcha-client</artifactId>
-                <version>1.0.4-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>captcha-provider</artifactId>
-                <version>1.0.4-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
             <dependency>
                 <groupId>com.apzda.cloud</groupId>
                 <artifactId>captcha-service</artifactId>
-                <version>1.0.4-SNAPSHOT</version>
+                <version>1.0.4</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
