@@ -40,6 +40,8 @@ public class CaptchaConfigProperties {
 
     private Duration timeout = Duration.ofMinutes(120);
 
+    private Duration expired = Duration.ofSeconds(15);
+
     private boolean removeOnInvalid;
 
     private int maxTryCount = 5;

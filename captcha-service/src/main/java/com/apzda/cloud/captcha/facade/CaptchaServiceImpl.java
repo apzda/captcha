@@ -128,7 +128,7 @@ public class CaptchaServiceImpl implements CaptchaService {
                     val captcha = new Captcha();
                     captcha.setId(id);
                     captcha.setCode(Captcha.VERIFIED);
-                    captcha.setExpireTime(DateUtil.currentSeconds() + properties.getTimeout().toSeconds());
+                    captcha.setExpireTime(DateUtil.currentSeconds() + properties.getExpired().toSeconds());
                     captchaStorage.save(uuid, captcha);
                     return builder.build();
                 }
