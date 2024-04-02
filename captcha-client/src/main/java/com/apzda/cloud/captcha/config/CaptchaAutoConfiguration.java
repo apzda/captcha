@@ -16,6 +16,8 @@
  */
 package com.apzda.cloud.captcha.config;
 
+import com.apzda.cloud.captcha.helper.CaptchaHelper;
+import com.apzda.cloud.captcha.proto.CaptchaService;
 import com.apzda.cloud.captcha.proto.CaptchaServiceGsvc;
 import com.apzda.cloud.gsvc.i18n.MessageSourceNameResolver;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +40,11 @@ public class CaptchaAutoConfiguration {
     @Bean("captcha.MessageSourceNameResolver")
     MessageSourceNameResolver messageSourceNameResolver() {
         return () -> "messages-captcha";
+    }
+
+    @Bean
+    CaptchaHelper captchaHelper(CaptchaService captchaService) {
+        return new CaptchaHelper(captchaService);
     }
 
 }
