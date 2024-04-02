@@ -40,7 +40,7 @@ public class CaptchaConfigProperties {
 
     private Duration timeout = Duration.ofMinutes(120);
 
-    private Duration expired = Duration.ofSeconds(15);
+    private Duration expired = Duration.ofSeconds(30);
 
     private boolean removeOnInvalid;
 

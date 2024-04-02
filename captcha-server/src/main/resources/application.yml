@@ -14,6 +14,11 @@ management:
       exposure:
         include: health,info
 
+apzda:
+  cloud:
+    captcha:
+      expired: 120s
+
 logging:
   level:
     com.apzda.cloud.captcha.aop: trace
