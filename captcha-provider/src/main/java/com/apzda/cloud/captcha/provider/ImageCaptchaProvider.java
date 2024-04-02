@@ -110,7 +110,14 @@ public class ImageCaptchaProvider implements CaptchaProvider {
             captchaStorage.remove(uuid, captcha);
             return ValidateStatus.EXPIRED;
         }
-        if (!Objects.equals(code, ca.getCode())) {
+        boolean correct;
+        if (props.getBool("case-sensitive", false)) {
+            correct = StringUtils.equalsIgnoreCase(code, ca.getCode());
+        }
+        else {
+            correct = Objects.equals(code, ca.getCode());
+        }
+        if (!correct) {
             if (removeOnInvalid) {
                 captchaStorage.remove(uuid, captcha);
             }
