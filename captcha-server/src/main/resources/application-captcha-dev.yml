@@ -1,0 +1,11 @@
+server:
+  port: 38082
+
+spring:
+  data:
+    redis:
+      host: localhost
+      database: 0
+logging:
+  level:
+    com.apzda: trace
