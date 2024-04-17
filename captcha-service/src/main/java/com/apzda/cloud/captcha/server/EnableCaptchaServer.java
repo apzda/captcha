@@ -17,10 +17,8 @@
 package com.apzda.cloud.captcha.server;
 
 import com.apzda.cloud.captcha.config.CaptchaConfig;
-import com.apzda.cloud.captcha.proto.CaptchaServiceGsvc;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 
 import java.lang.annotation.*;
 
@@ -31,8 +29,7 @@ import java.lang.annotation.*;
  **/
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@PropertySource("classpath:apzda.captcha.service.properties")
-@Import({ CaptchaServiceGsvc.class, CaptchaConfig.class })
+@Import(CaptchaConfig.class)
 @ComponentScan(basePackages = { "com.apzda.cloud.captcha.facade" })
 @Documented
 public @interface EnableCaptchaServer {
