@@ -25,7 +25,7 @@ import com.apzda.cloud.captcha.proto.*;
 import com.apzda.cloud.captcha.storage.CaptchaStorage;
 import com.apzda.cloud.gsvc.core.GsvcContextHolder;
 import com.apzda.cloud.gsvc.ext.GsvcExt;
-import com.apzda.cloud.gsvc.utils.I18nHelper;
+import com.apzda.cloud.gsvc.utils.I18nUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -64,13 +64,13 @@ public class CaptchaServiceImpl implements CaptchaService {
         val captchaProvider = captchaConfig.getCaptchaProvider();
         if (captchaProvider == null) {
             builder.setErrCode(500);
-            builder.setErrMsg(I18nHelper.t("captcha.provider.404"));
+            builder.setErrMsg(I18nUtils.t("captcha.provider.404"));
         }
         else {
             val uuid = header("X-CAPTCHA-UUID", request.getUuid());
             if (StringUtils.isBlank(uuid)) {
                 builder.setErrCode(1);
-                builder.setErrMsg(I18nHelper.t("captcha.uuid.missing"));
+                builder.setErrMsg(I18nUtils.t("captcha.uuid.missing"));
             }
             var width = request.getWidth();
             var height = request.getHeight();
@@ -90,7 +90,7 @@ public class CaptchaServiceImpl implements CaptchaService {
             catch (Exception e) {
                 log.warn("Cannot create captcha - {}", e.getMessage());
                 builder.setErrCode(500);
-                builder.setErrMsg(I18nHelper.t("captcha.provider.500"));
+                builder.setErrMsg(I18nUtils.t("captcha.provider.500"));
             }
         }
         return builder.build();
@@ -103,22 +103,22 @@ public class CaptchaServiceImpl implements CaptchaService {
         val id = header("X-CAPTCHA-ID", request.getId());
         if (StringUtils.isBlank(uuid)) {
             builder.setErrCode(1);
-            builder.setErrMsg(I18nHelper.t("captcha.uuid.missing"));
+            builder.setErrMsg(I18nUtils.t("captcha.uuid.missing"));
         }
         if (StringUtils.isBlank(id)) {
             builder.setErrCode(1);
-            builder.setErrMsg(I18nHelper.t("captcha.id.missing"));
+            builder.setErrMsg(I18nUtils.t("captcha.id.missing"));
         }
         val code = request.getCode();
         if (StringUtils.isBlank(code)) {
             builder.setErrCode(1);
-            builder.setErrMsg(I18nHelper.t("captcha.code.missing"));
+            builder.setErrMsg(I18nUtils.t("captcha.code.missing"));
         }
         val captchaProvider = captchaConfig.getCaptchaProvider();
         val removeOnInvalid = properties.isRemoveOnInvalid();
         if (captchaProvider == null) {
             builder.setErrCode(1);
-            builder.setErrMsg(I18nHelper.t("captcha.invalid"));
+            builder.setErrMsg(I18nUtils.t("captcha.invalid"));
         }
         else {
             try {
@@ -134,7 +134,7 @@ public class CaptchaServiceImpl implements CaptchaService {
                 }
                 else if (validate == ValidateStatus.EXPIRED) {
                     builder.setErrCode(2);
-                    builder.setErrMsg(I18nHelper.t("captcha.expired"));
+                    builder.setErrMsg(I18nUtils.t("captcha.expired"));
                     builder.setReload(true);
                     return builder.build();
                 }
@@ -147,7 +147,7 @@ public class CaptchaServiceImpl implements CaptchaService {
             }
         }
         builder.setErrCode(1);
-        builder.setErrMsg(I18nHelper.t("captcha.invalid"));
+        builder.setErrMsg(I18nUtils.t("captcha.invalid"));
         return builder.build();
     }
 
@@ -167,18 +167,18 @@ public class CaptchaServiceImpl implements CaptchaService {
             val now = DateUtil.currentSeconds();
             if (now > ca.getExpireTime()) {
                 builder.setErrCode(2);
-                builder.setErrMsg(I18nHelper.t("captcha.expired"));
+                builder.setErrMsg(I18nUtils.t("captcha.expired"));
                 return builder.build();
             }
             else if (!Captcha.VERIFIED.equals(ca.getCode())) {
                 builder.setErrCode(1);
-                builder.setErrMsg(I18nHelper.t("captcha.invalid"));
+                builder.setErrMsg(I18nUtils.t("captcha.invalid"));
             }
         }
         catch (Exception e) {
             log.error("Cannot load captcha(uuid: {}, id: {}) - {}", uuid, id, e.getMessage());
             builder.setErrCode(1);
-            builder.setErrMsg(I18nHelper.t("captcha.invalid"));
+            builder.setErrMsg(I18nUtils.t("captcha.invalid"));
         }
         return builder.build();
     }

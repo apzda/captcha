@@ -23,7 +23,7 @@ import com.apzda.cloud.captcha.error.CaptchaExpired;
 import com.apzda.cloud.captcha.proto.CaptchaService;
 import com.apzda.cloud.captcha.proto.CheckReq;
 import com.apzda.cloud.gsvc.core.GsvcContextHolder;
-import com.apzda.cloud.gsvc.utils.I18nHelper;
+import com.apzda.cloud.gsvc.utils.I18nUtils;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +76,7 @@ public class VerificationInterceptor {
             val validate = captchaService.check(req);
             if (validate == null) {
                 log.warn("Captcha(uuid:{}, id:{}) is error: no response", uuid, id);
-                throw new CaptchaException(new CaptchaError(I18nHelper.t("captcha.invalid")));
+                throw new CaptchaException(new CaptchaError(I18nUtils.t("captcha.invalid")));
             }
             else if (validate.getErrCode() == 1) {
                 log.warn("Captcha(uuid:{}, id:{}) is invalid: {}", uuid, id, validate.getErrMsg());
@@ -89,7 +89,7 @@ public class VerificationInterceptor {
             return;
         }
         log.debug("Captcha not supported!");
-        throw new CaptchaException(new CaptchaError(I18nHelper.t("captcha.not.support")));
+        throw new CaptchaException(new CaptchaError(I18nUtils.t("captcha.not.support")));
     }
 
     @Data
