@@ -108,7 +108,7 @@
                         <generateReleasePoms>false</generateReleasePoms>
                         <releaseProfiles>release</releaseProfiles>
                         <arguments>-Dmaven.site.skip=true</arguments>
-                        <goals>clean install</goals>
+                        <goals>install</goals>
                     </configuration>
                 </plugin>
             </plugins>
