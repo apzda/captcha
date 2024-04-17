@@ -8,13 +8,13 @@ import com.apzda.cloud.captcha.proto.CheckReq;
 import com.apzda.cloud.captcha.proto.CreateReq;
 import com.apzda.cloud.captcha.proto.ValidateReq;
 import com.apzda.cloud.captcha.server.EnableCaptchaServer;
+import com.apzda.cloud.test.autoconfig.GsvcTest;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,10 +25,9 @@ import static org.mockito.BDDMockito.given;
  * @version 1.0.0
  * @since 1.0.0
  **/
-@JsonTest
+@GsvcTest
 @ContextConfiguration(classes = TestApp.class)
 @ImportAutoConfiguration({ RedisAutoConfiguration.class })
-@EnableCaptchaServer
 class CaptchaServiceImplTest {
 
     @Autowired

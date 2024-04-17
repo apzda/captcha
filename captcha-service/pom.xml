@@ -49,5 +49,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.apzda.cloud</groupId>
+            <artifactId>apzda-cloud-gsvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

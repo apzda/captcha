@@ -16,6 +16,7 @@
  */
 package com.apzda.cloud.captcha;
 
+import com.apzda.cloud.captcha.server.EnableCaptchaServer;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  **/
 @SpringBootApplication
+@EnableCaptchaServer
 public class TestApp {
 
 }

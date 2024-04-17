@@ -4,13 +4,12 @@ import com.apzda.cloud.captcha.TestApp;
 import com.apzda.cloud.captcha.proto.CaptchaService;
 import com.apzda.cloud.captcha.proto.CreateReq;
 import com.apzda.cloud.captcha.proto.ValidateReq;
-import com.apzda.cloud.captcha.server.EnableCaptchaServer;
+import com.apzda.cloud.test.autoconfig.GsvcTest;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
@@ -23,10 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @version 1.0.0
  * @since 1.0.0
  **/
-@JsonTest
+@GsvcTest
 @ContextConfiguration(classes = TestApp.class)
 @ImportAutoConfiguration({ RedisAutoConfiguration.class })
-@EnableCaptchaServer
 @TestPropertySource(properties = { "apzda.cloud.captcha.timeout=2s" })
 class CaptchaServiceImplExpireTest {
 
