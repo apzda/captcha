@@ -37,6 +37,7 @@ class RedisConfiguration {
 
     @Bean
     CaptchaStorage captchaStorage(StringRedisTemplate stringRedisTemplate, ObjectMapper objectMapper) {
+        log.trace("CaptchaStorage class: {}", RedisCaptchaStorage.class.getCanonicalName());
         return new RedisCaptchaStorage(stringRedisTemplate, objectMapper);
     }
 

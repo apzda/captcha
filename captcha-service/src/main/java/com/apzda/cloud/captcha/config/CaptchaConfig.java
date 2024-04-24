@@ -71,7 +71,8 @@ public class CaptchaConfig implements InitializingBean {
 
     @Bean
     @ConditionalOnMissingClass("org.springframework.data.redis.core.StringRedisTemplate")
-    CaptchaStorage captchaStorage() {
+    static CaptchaStorage captchaStorage(CaptchaConfigProperties properties) {
+        log.trace("CaptchaStorage class: {}", LocalCaptchaStorage.class.getCanonicalName());
         return new LocalCaptchaStorage(properties.getTimeout());
     }
 
