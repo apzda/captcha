@@ -53,13 +53,10 @@ public class CaptchaServiceImpl implements CaptchaService {
     @Override
     public CreateRes create(CreateReq request) {
         val builder = CreateRes.newBuilder();
-        if (GsvcContextHolder.getRequest().isPresent()) {
-            val req = GsvcContextHolder.getRequest().get();
-            val remoteAddr = req.getRemoteAddr();
-            int count = captchaStorage.getIpCount(remoteAddr);
-            if (count > properties.getMaxCount()) {
-                throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS);
-            }
+        val remoteIp = GsvcContextHolder.getRemoteIp();
+        int count = captchaStorage.getIpCount(remoteIp);
+        if (count > properties.getMaxCount()) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS);
         }
         val captchaProvider = captchaConfig.getCaptchaProvider();
         if (captchaProvider == null) {
