@@ -178,6 +178,19 @@ public class CaptchaServiceImpl implements CaptchaService {
             builder.setErrCode(1);
             builder.setErrMsg(I18nUtils.t("captcha.invalid"));
         }
+        finally {
+            // 为了安全，只要做了check，就删除.
+            try {
+                captchaStorage.remove(uuid, captcha);
+            }
+            catch (Exception ignored) {
+            }
+            try {
+                captchaStorage.remove("v_" + uuid, captcha);
+            }
+            catch (Exception ignored) {
+            }
+        }
         return builder.build();
     }
 
