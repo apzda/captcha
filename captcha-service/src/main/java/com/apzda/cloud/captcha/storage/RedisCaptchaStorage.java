@@ -63,7 +63,7 @@ public class RedisCaptchaStorage implements CaptchaStorage {
         val key = "captcha." + genId(uuid, captcha);
         val ca = objectMapper.writeValueAsString(captcha);
         stringRedisTemplate.opsForValue()
-            .set(key, ca, captcha.getExpireTime() - DateUtil.currentSeconds() + Duration.ofSeconds(5).toSeconds(),
+            .set(key, ca, captcha.getExpireTime() - DateUtil.currentSeconds() + Duration.ofSeconds(3600).toSeconds(),
                     TimeUnit.SECONDS);
     }
 

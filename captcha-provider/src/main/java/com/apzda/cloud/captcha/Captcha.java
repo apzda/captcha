@@ -16,6 +16,7 @@
  */
 package com.apzda.cloud.captcha;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
@@ -24,9 +25,10 @@ import lombok.Data;
  * @since 1.0.0
  **/
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Captcha {
 
-    public static final String VERIFIED = "VERIFIED";
+    public static final String VERIFIED = "^_^";
 
     private String id;
 

@@ -60,7 +60,8 @@ public class VerificationInterceptor {
         if (StringUtils.isBlank(captchaData.getCaptchaId())) {
             val request = GsvcContextHolder.getRequest();
             if (request.isPresent()) {
-                val uuid = GsvcContextHolder.header("X-CAPTCHA-UUID");
+                val uuid = StringUtils.defaultIfBlank(GsvcContextHolder.header("X-CAPTCHA-UUID"),
+                        GsvcContextHolder.header("UUID"));
                 val id = GsvcContextHolder.header("X-CAPTCHA-ID");
                 captchaData.setCaptchaId(id);
                 captchaData.setCaptchaUuid(uuid);

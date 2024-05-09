@@ -33,6 +33,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import java.time.Duration;
+
 /**
  * @author fengz (windywany@gmail.com)
  * @version 1.0.0
@@ -73,7 +75,7 @@ public class CaptchaConfig implements InitializingBean {
     @ConditionalOnMissingClass("org.springframework.data.redis.core.StringRedisTemplate")
     static CaptchaStorage captchaStorage(CaptchaConfigProperties properties) {
         log.trace("CaptchaStorage class: {}", LocalCaptchaStorage.class.getCanonicalName());
-        return new LocalCaptchaStorage(properties.getTimeout());
+        return new LocalCaptchaStorage(properties.getTimeout().plus(Duration.ofSeconds(3600)));
     }
 
 }

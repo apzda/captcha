@@ -38,9 +38,9 @@ public class CaptchaConfigProperties {
 
     private int height = 35;
 
-    private Duration timeout = Duration.ofMinutes(120);
+    private Duration timeout = Duration.ofMinutes(60);
 
-    private Duration expired = Duration.ofSeconds(30);
+    private Duration expired = Duration.ofSeconds(120);
 
     private boolean removeOnInvalid;
 

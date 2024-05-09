@@ -64,10 +64,11 @@ public class CaptchaServiceImpl implements CaptchaService {
             builder.setErrMsg(I18nUtils.t("captcha.provider.404"));
         }
         else {
-            val uuid = header("X-CAPTCHA-UUID", request.getUuid());
+            val uuid = header("X-CAPTCHA-UUID", header("UUID", request.getUuid()));
             if (StringUtils.isBlank(uuid)) {
                 builder.setErrCode(1);
                 builder.setErrMsg(I18nUtils.t("captcha.uuid.missing"));
+                return builder.build();
             }
             var width = request.getWidth();
             var height = request.getHeight();
@@ -96,7 +97,7 @@ public class CaptchaServiceImpl implements CaptchaService {
     @Override
     public ValidateRes validate(ValidateReq request) {
         val builder = ValidateRes.newBuilder();
-        val uuid = header("X-CAPTCHA-UUID", request.getUuid());
+        val uuid = header("X-CAPTCHA-UUID", header("UUID", request.getUuid()));
         val id = header("X-CAPTCHA-ID", request.getId());
         if (StringUtils.isBlank(uuid)) {
             builder.setErrCode(1);
@@ -126,7 +127,7 @@ public class CaptchaServiceImpl implements CaptchaService {
                     captcha.setId(id);
                     captcha.setCode(Captcha.VERIFIED);
                     captcha.setExpireTime(DateUtil.currentSeconds() + properties.getExpired().toSeconds());
-                    captchaStorage.save(uuid, captcha);
+                    captchaStorage.save("v_" + uuid, captcha);
                     return builder.build();
                 }
                 else if (validate == ValidateStatus.EXPIRED) {
@@ -157,7 +158,7 @@ public class CaptchaServiceImpl implements CaptchaService {
         val captcha = new Captcha();
         captcha.setId(id);
         try {
-            val ca = captchaStorage.load(uuid, captcha);
+            val ca = captchaStorage.load("v_" + uuid, captcha);
             if (ca == null) {
                 throw new IllegalStateException("Cannot load captcha from storage");
             }

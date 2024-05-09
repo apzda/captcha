@@ -9,3 +9,10 @@ spring:
 logging:
   level:
     com.apzda: trace
+
+apzda:
+  cloud:
+    captcha:
+      props:
+        test-mode: "true"
+      remove-on-invalid: true

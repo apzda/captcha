@@ -147,7 +147,7 @@ public class SliderCaptchaProvider implements CaptchaProvider {
         val xPos = Integer.parseInt(ca.getCode());
         val randomX = Integer.parseInt(xy.get(0));
         if (Math.abs(randomX - xPos) <= tolerant) {
-            captchaStorage.remove(uuid, captcha);
+            // captchaStorage.remove(uuid, captcha);
             return ValidateStatus.OK;
         }
         if (removeOnInvalid) {

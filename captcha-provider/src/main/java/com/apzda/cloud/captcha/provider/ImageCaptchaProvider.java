@@ -54,7 +54,20 @@ public class ImageCaptchaProvider implements CaptchaProvider {
     public void init(@NonNull CaptchaStorage storage, @NonNull Props props) throws Exception {
         this.captchaStorage = storage;
         this.props = props;
-        if (StringUtils.isNotBlank(props.get("codes"))) {
+        if (props.getBool("test-mode", false)) {
+            this.codeGenerator = new CodeGenerator() {
+                @Override
+                public String generate() {
+                    return "A12b";
+                }
+
+                @Override
+                public boolean verify(String code, String userInputCode) {
+                    return Objects.equals(code, userInputCode);
+                }
+            };
+        }
+        else if (StringUtils.isNotBlank(props.get("codes"))) {
             this.codeGenerator = new RandomGenerator(props.get("codes"), props.getInt("length", 4));
         }
         else {
@@ -72,13 +85,16 @@ public class ImageCaptchaProvider implements CaptchaProvider {
         AbstractCaptcha captcha;
         val type = props.getString("type", "line");
         if ("line".equalsIgnoreCase(type)) {
-            captcha = CaptchaUtil.createLineCaptcha(width, height);
+            val lineCount = props.getInt("line-count", 60);
+            captcha = CaptchaUtil.createLineCaptcha(width, height, codeGenerator, lineCount);
         }
         else if ("shear".equalsIgnoreCase(type)) {
-            captcha = CaptchaUtil.createShearCaptcha(width, height);
+            val thickness = props.getInt("thickness", 6);
+            captcha = CaptchaUtil.createShearCaptcha(width, height, codeGenerator, thickness);
         }
         else {
-            captcha = CaptchaUtil.createCircleCaptcha(width, height);
+            val circleCount = props.getInt("circle-count", 8);
+            captcha = CaptchaUtil.createCircleCaptcha(width, height, codeGenerator, circleCount);
         }
         captcha.setGenerator(codeGenerator);
 
@@ -112,10 +128,10 @@ public class ImageCaptchaProvider implements CaptchaProvider {
         }
         boolean correct;
         if (props.getBool("case-sensitive", false)) {
-            correct = StringUtils.equalsIgnoreCase(code, ca.getCode());
+            correct = Objects.equals(code, ca.getCode());
         }
         else {
-            correct = Objects.equals(code, ca.getCode());
+            correct = StringUtils.equalsIgnoreCase(code, ca.getCode());
         }
         if (!correct) {
             if (removeOnInvalid) {
@@ -123,7 +139,7 @@ public class ImageCaptchaProvider implements CaptchaProvider {
             }
             return ValidateStatus.ERROR;
         }
-        captchaStorage.remove(uuid, captcha);
+        // captchaStorage.remove(uuid, captcha);
         return ValidateStatus.OK;
     }
 

@@ -37,8 +37,13 @@ public class CaptchaHelper {
     private final CaptchaService captchaService;
 
     public void validate() {
-        val uuid = GsvcContextHolder.header("X-CAPTCHA-UUID");
-        val id = GsvcContextHolder.header("X-CAPTCHA-ID");
+        validate(null);
+    }
+
+    public void validate(String captchaId) {
+        val uuid = StringUtils.defaultIfBlank(GsvcContextHolder.header("X-CAPTCHA-UUID"),
+                GsvcContextHolder.header("UUID"));
+        val id = StringUtils.defaultIfBlank(captchaId, GsvcContextHolder.header("X-CAPTCHA-ID"));
 
         if (StringUtils.isBlank(uuid) || StringUtils.isBlank(id)) {
             throw new CaptchaException(new MissingCaptcha());

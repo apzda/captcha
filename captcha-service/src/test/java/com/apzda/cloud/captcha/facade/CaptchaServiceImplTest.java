@@ -2,12 +2,12 @@ package com.apzda.cloud.captcha.facade;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.captcha.generator.CodeGenerator;
 import com.apzda.cloud.captcha.TestApp;
 import com.apzda.cloud.captcha.proto.CaptchaService;
 import com.apzda.cloud.captcha.proto.CheckReq;
 import com.apzda.cloud.captcha.proto.CreateReq;
 import com.apzda.cloud.captcha.proto.ValidateReq;
-import com.apzda.cloud.captcha.server.EnableCaptchaServer;
 import com.apzda.cloud.test.autoconfig.GsvcTest;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,8 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -40,7 +42,8 @@ class CaptchaServiceImplTest {
             val lineCaptcha = Mockito.mock(LineCaptcha.class);
             given(lineCaptcha.getCode()).willReturn("abcd");
 
-            mocked.when(() -> CaptchaUtil.createLineCaptcha(105, 35)).thenReturn(lineCaptcha);
+            mocked.when(() -> CaptchaUtil.createLineCaptcha(anyInt(), anyInt(), any(CodeGenerator.class), anyInt()))
+                .thenReturn(lineCaptcha);
 
             val req = CreateReq.newBuilder().setUuid("1235").build();
 
