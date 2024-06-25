@@ -101,14 +101,14 @@ public class DragCaptchaProvider implements CaptchaProvider {
                 return false;
             }
             val time = dto.endTime - dto.beginTime;
-            if (time < props.getLong("min-time", 250) || time > props.getLong("max-time", 2500)) {
+            if (time < props.getLong("min-time", 350) || time > props.getLong("max-time", 3500)) {
                 return false;
             }
             if (dto.points == null) {
                 return false;
             }
             val size = dto.points.size();
-            if (size < props.getLong("min-points", 15) || size > props.getLong("max-points", 30)) {
+            if (size < props.getLong("min-points", 15) || size > props.getLong("max-points", 50)) {
                 return false;
             }
 
@@ -116,7 +116,7 @@ public class DragCaptchaProvider implements CaptchaProvider {
             val p1 = dto.points.get(size - 1);
             val d = Math.abs(p1.get(1) - p0.get(1));
 
-            if (d < props.getLong("min-diff", 5)) {
+            if (d < props.getLong("min-diff", 3)) {
                 return false;
             }
             val dCode = Double.parseDouble(code);

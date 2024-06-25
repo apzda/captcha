@@ -85,15 +85,15 @@ public class ImageCaptchaProvider implements CaptchaProvider {
         AbstractCaptcha captcha;
         val type = props.getString("type", "line");
         if ("line".equalsIgnoreCase(type)) {
-            val lineCount = props.getInt("line-count", 60);
+            val lineCount = props.getInt("count", 60);
             captcha = CaptchaUtil.createLineCaptcha(width, height, codeGenerator, lineCount);
         }
         else if ("shear".equalsIgnoreCase(type)) {
-            val thickness = props.getInt("thickness", 6);
+            val thickness = props.getInt("count", 6);
             captcha = CaptchaUtil.createShearCaptcha(width, height, codeGenerator, thickness);
         }
         else {
-            val circleCount = props.getInt("circle-count", 8);
+            val circleCount = props.getInt("count", 8);
             captcha = CaptchaUtil.createCircleCaptcha(width, height, codeGenerator, circleCount);
         }
         captcha.setGenerator(codeGenerator);
