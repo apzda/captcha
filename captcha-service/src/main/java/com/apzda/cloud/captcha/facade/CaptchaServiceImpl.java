@@ -153,6 +153,11 @@ public class CaptchaServiceImpl implements CaptchaService {
     public GsvcExt.CommonRes check(CheckReq request) {
         val builder = GsvcExt.CommonRes.newBuilder();
         builder.setErrCode(0);
+
+        if (StringUtils.equalsIgnoreCase(properties.getProps().get("test-mode"), "true")) {
+            return builder.build();
+        }
+
         val uuid = request.getUuid();
         val id = request.getId();
         val captcha = new Captcha();
