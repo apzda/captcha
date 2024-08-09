@@ -45,10 +45,19 @@ public class DragCaptchaProvider implements CaptchaProvider {
 
     private Props props;
 
+    private double maxMultiple = 1.15d;
+
     @Override
     public void init(@Nonnull CaptchaStorage storage, @Nonnull Props props) throws Exception {
         this.captchaStorage = storage;
         this.props = props;
+        maxMultiple = props.getDouble("max-multiple", maxMultiple);
+        if (maxMultiple < 1.05d) {
+            maxMultiple = 1.05d;
+        }
+        else if (maxMultiple > 2d) {
+            maxMultiple = 2d;
+        }
     }
 
     @Override
@@ -61,7 +70,7 @@ public class DragCaptchaProvider implements CaptchaProvider {
         val id = UUID.randomUUID().toString();
         val ca = new Captcha();
         ca.setId(id);
-        var code = new Random().nextDouble(1.23d, 1.68d);
+        var code = new Random().nextDouble(1.05d, maxMultiple);
         ca.setCode(String.valueOf(code));
         ca.setExpireTime(DateUtil.currentSeconds() + timeout.toSeconds());
         captchaStorage.save(uuid, ca);

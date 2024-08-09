@@ -26,7 +26,7 @@ apzda.cloud.captcha.props.remove-on-invalid=false
 # 同一验证码最大校验次数
 apzda.cloud.captcha.props.max-try-count=5
 # 同一IP地址，一分钟内最多生成验证码次数
-apzda.cloud.captcha.props.max-count=10
+apzda.cloud.captcha.props.max-count=60
 ```
 
 ## Image: 图片验证码
@@ -61,6 +61,8 @@ apzda.cloud.captcha.props.tolerant=5
 
 ```properties
 apzda.cloud.captcha.provider=drag
+# 最大乘数(介于1.05于2之间)
+apzda.cloud.captcha.props.max-multiple=1.15
 ```
 
 ## 接口

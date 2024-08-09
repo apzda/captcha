@@ -46,7 +46,7 @@ public class CaptchaConfigProperties {
 
     private int maxTryCount = 5;
 
-    private int maxCount = 10;
+    private int maxCount = 60;
 
     private final Map<String, String> props = new HashMap<>();
 
