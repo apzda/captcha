@@ -18,6 +18,7 @@ package com.apzda.cloud.captcha.provider;
 
 import com.apzda.cloud.captcha.SerializableStream;
 import com.google.common.cache.CacheLoader;
+import jakarta.annotation.Nonnull;
 import lombok.val;
 
 import java.io.File;
@@ -38,7 +39,8 @@ class ImageCacheLoader extends CacheLoader<Integer, SerializableStream> {
     }
 
     @Override
-    public SerializableStream load(Integer key) throws Exception {
+    @Nonnull
+    public SerializableStream load(@Nonnull Integer key) throws Exception {
         val file = images.get(key);
         try (val input = new FileInputStream(file)) {
             return new SerializableStream(input);

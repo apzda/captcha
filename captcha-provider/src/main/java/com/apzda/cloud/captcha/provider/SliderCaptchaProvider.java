@@ -18,6 +18,7 @@ package com.apzda.cloud.captcha.provider;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import com.apzda.cloud.captcha.Captcha;
 import com.apzda.cloud.captcha.SerializableStream;
 import com.apzda.cloud.captcha.ValidateStatus;
@@ -52,15 +53,15 @@ import java.util.stream.Stream;
 @Slf4j
 public class SliderCaptchaProvider implements CaptchaProvider {
 
-    private final int imagesCnt;
+    private int imagesCnt;
 
-    private final List<File> sliders;
+    private List<File> sliders;
 
-    private final int slidersCnt;
+    private int slidersCnt;
 
-    private final LoadingCache<Integer, SerializableStream> imagesCache;
+    private LoadingCache<Integer, SerializableStream> imagesCache;
 
-    private final LoadingCache<Integer, SerializableStream> sliderCache;
+    private LoadingCache<Integer, SerializableStream> sliderCache;
 
     private CaptchaStorage captchaStorage;
 
@@ -70,14 +71,7 @@ public class SliderCaptchaProvider implements CaptchaProvider {
 
     private int tolerant;
 
-    public SliderCaptchaProvider() {
-        List<File> images = loadImages(false);
-        imagesCnt = images.size();
-        sliders = loadImages(true);
-        slidersCnt = sliders.size();
-        imagesCache = CacheBuilder.newBuilder().build(new ImageCacheLoader(images));
-        sliderCache = CacheBuilder.newBuilder().build(new ImageCacheLoader(sliders));
-    }
+    private String path;
 
     @Override
     public void init(@NonNull CaptchaStorage storage, @NonNull Props props) throws Exception {
@@ -85,9 +79,20 @@ public class SliderCaptchaProvider implements CaptchaProvider {
         this.watermark = props.getString("watermark", "");
         this.noise = props.getInt("noise", 1);
         this.tolerant = props.getInt("tolerant", 5);
+        this.path = props.getString("path", "slider");
+
+        List<File> images = loadImages(false);
+        imagesCnt = images.size();
+
+        sliders = loadImages(true);
+        slidersCnt = sliders.size();
+
         if (imagesCnt == 0 || slidersCnt == 0) {
             throw new IllegalStateException("images(" + imagesCnt + ") or slider(" + slidersCnt + ") is empty");
         }
+
+        imagesCache = CacheBuilder.newBuilder().build(new ImageCacheLoader(images));
+        sliderCache = CacheBuilder.newBuilder().build(new ImageCacheLoader(sliders));
 
         log.info("SliderCaptchaProvider initialized: images({}), slider({}), watermark({}), noise({}), tolerant({})",
                 imagesCnt, slidersCnt, watermark, noise, tolerant);
@@ -160,10 +165,10 @@ public class SliderCaptchaProvider implements CaptchaProvider {
         List<URL> images;
 
         if (slider) {
-            images = ResourceUtil.getResources("slider/sliders");
+            images = ResourceUtil.getResources(StrUtil.format("{}/sliders", this.path));
         }
         else {
-            images = ResourceUtil.getResources("slider/images");
+            images = ResourceUtil.getResources(StrUtil.format("{}/images", this.path));
         }
 
         return images.stream().flatMap(url -> {

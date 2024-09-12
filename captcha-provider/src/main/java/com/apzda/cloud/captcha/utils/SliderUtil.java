@@ -4,6 +4,7 @@ import cn.hutool.core.codec.Base64Encoder;
 import com.apzda.cloud.captcha.SerializableStream;
 import com.apzda.cloud.captcha.SliderCaptcha;
 import com.apzda.cloud.gsvc.io.Base64DecodeMultipartFile;
+import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -11,6 +12,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -27,15 +29,18 @@ public class SliderUtil {
 
     private static final String TEMP_IMG_FILE_TYPE = "png";
 
-    public static SliderCaptcha createSliderCaptcha(SerializableStream sliderFile, SerializableStream noiseFile,
-            SerializableStream originalFile, String watermark, int noise) throws Exception {
+    public static SliderCaptcha createSliderCaptcha(@Nonnull SerializableStream sliderFile,
+            @Nonnull SerializableStream noiseFile, SerializableStream originalFile, String watermark, int noise)
+            throws Exception {
 
         val random = new Random();
-        val sliderImage = ImageIO.read(Base64DecodeMultipartFile.base64ToInputStream(sliderFile.getBase64()));
+        val sliderImage = ImageIO
+            .read(Objects.requireNonNull(Base64DecodeMultipartFile.base64ToInputStream(sliderFile.getBase64())));
         val sliderWidth = sliderImage.getWidth();
         val sliderHeight = sliderImage.getHeight();
 
-        val originalImage = ImageIO.read(Base64DecodeMultipartFile.base64ToInputStream(originalFile.getBase64()));
+        val originalImage = ImageIO
+            .read(Objects.requireNonNull(Base64DecodeMultipartFile.base64ToInputStream(originalFile.getBase64())));
         val originalWidth = originalImage.getWidth();
         val originalHeight = originalImage.getHeight();
 
@@ -51,7 +56,7 @@ public class SliderUtil {
 
         if (noise > 0) {
             val interfereSliderImage = ImageIO
-                .read(Base64DecodeMultipartFile.base64ToInputStream(noiseFile.getBase64()));
+                .read(Objects.requireNonNull(Base64DecodeMultipartFile.base64ToInputStream(noiseFile.getBase64())));
             for (int i = 0; i < noise; i++) {
                 int interfereX = random.nextInt(originalWidth - 3 * sliderWidth) + 2 * sliderWidth;
                 int interfereY = random.nextInt(originalHeight - sliderHeight);
